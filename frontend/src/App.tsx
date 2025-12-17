@@ -1,44 +1,52 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import { socket } from "./services/socket";
+import { useEffect } from "react";
+import SellerDashboard from "./pages/SellerDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import BuyerDashboard from "./pages/BuyerDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
+  // Testing websocket connection
+  useEffect(() => {
+    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("✅ WEBSOCKET CONNECTED:", socket.id);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Dashboard Routes (Placeholders for now) */}
-        <Route 
-          path="/buyer" 
-          element={
-            <div className="min-h-screen bg-gray-50 p-8">
-              <h1 className="text-3xl font-bold text-blue-600">Buyer Dashboard</h1>
-              <p className="mt-2 text-gray-600">Work in progress...</p>
-            </div>
-          } 
-        />
-        
-        <Route 
-          path="/seller" 
-          element={
-            <div className="min-h-screen bg-gray-50 p-8">
-              <h1 className="text-3xl font-bold text-green-600">Seller Dashboard</h1>
-              <p className="mt-2 text-gray-600">Work in progress...</p>
-            </div>
-          } 
-        />
-        
-        <Route 
-          path="/admin" 
-          element={
-            <div className="min-h-screen bg-gray-50 p-8">
-              <h1 className="text-3xl font-bold text-purple-600">Admin Dashboard</h1>
-              <p className="mt-2 text-gray-600">Work in progress...</p>
-            </div>
-          } 
-        />
+        {/* Protected Dashboard Routes */}
 
+        <Route path="/buyer" element={
+            <ProtectedRoute allowedRoles={['Buyer']}>
+              <BuyerDashboard />
+            </ProtectedRoute>
+          } />
+
+        <Route path="/seller" element={
+            <ProtectedRoute allowedRoles={['Seller']}>
+              <SellerDashboard />
+            </ProtectedRoute>
+          } />
+
+        <Route path="/admin" element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
         {/* Redirect unknown paths to Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
