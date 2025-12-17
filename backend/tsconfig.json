@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* File Layout */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Environment Settings */
+    "module": "commonjs",             /* Change from nodenext to commonjs */
+    "moduleResolution": "node",       /* Standard Node resolution */
+    "target": "es2020",               /* Good balance for Node.js */
+    "types": ["node"],                /* Ensure Node types are loaded */
+
+    /* Module Interop */
+    "esModuleInterop": true,          /* Allows 'import express from "express"' */
+    "verbatimModuleSyntax": false,    /* DISABLE this to fix your error */
+    "resolveJsonModule": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    
+    /* Other */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
