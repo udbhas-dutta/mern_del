@@ -37,6 +37,7 @@ const Login = () => {
         setIsRegister(false);
       }
     } catch (err) {
+        // eslint-disable-next-line
       alert("Error: " + (err as any).response?.data?.message || 'Something went wrong');
     }
   };
