@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios, {  } from 'axios';
+import axios from 'axios';
 import type { RootState } from '../app/store';
-import { setOrders, updateOrderRealTime } from '../features/orderSlice';
+import { setOrders, updateOrderRealTime } from '../features/orderSlice'; // Note: Ensure this path is correct
 import { socket } from '../services/socket';
 import { LogOut, Users, Briefcase, Clock, Activity, FileText, X } from 'lucide-react';
 import { logout } from '../features/authSlice';
@@ -25,6 +25,9 @@ const AdminDashboard = () => {
   const { token } = useSelector((state: RootState) => state.auth);
   const { orders } = useSelector((state: RootState) => state.orders);
 
+  // 1. DEFINE API URL
+  const API_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+
   // Selection States
   const [buyerSelections, setBuyerSelections] = useState<{ [key: string]: string }>({});
   const [sellerSelections, setSellerSelections] = useState<{ [key: string]: string }>({});
@@ -38,7 +41,8 @@ const AdminDashboard = () => {
     // 1. Fetch Orders
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/orders', {
+        // 2. USE API_URL
+        const res = await axios.get(`${API_URL}/api/orders`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         dispatch(setOrders(res.data));
@@ -50,7 +54,8 @@ const AdminDashboard = () => {
     // 2. Fetch Users (To populate Dropdowns)
     const fetchUsers = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/users', {
+        // 3. USE API_URL
+        const res = await axios.get(`${API_URL}/api/auth/users`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAllUsers(res.data);
@@ -70,14 +75,15 @@ const AdminDashboard = () => {
       socket.off('order_updated');
       socket.off('order_created');
     };
-  }, [dispatch, token]);
+  }, [dispatch, token, API_URL]);
 
   const handleAssignSeller = async (orderId: string) => {
     const sellerId = sellerSelections[orderId];
     if (!sellerId) return alert("Please select a Seller from the list");
 
     try {
-      const res = await axios.put('http://localhost:5000/api/orders/assign-seller', 
+      // 4. USE API_URL
+      const res = await axios.put(`${API_URL}/api/orders/assign-seller`, 
         { orderId, sellerId }, 
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -94,7 +100,8 @@ const AdminDashboard = () => {
     if (!buyerId) return alert("Please select a Buyer from the list");
 
     try {
-      const res = await axios.put('http://localhost:5000/api/orders/associate', 
+      // 5. USE API_URL
+      const res = await axios.put(`${API_URL}/api/orders/associate`, 
         { orderId, buyerId }, 
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -379,7 +386,7 @@ const AdminDashboard = () => {
                 <div className="space-y-3 relative before:absolute before:left-2 before:top-2 before:h-full before:w-0.5 before:bg-gray-200">
                   {
                     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-selectedOrder.stageHistory?.map((log: any, index: number) => (
+                    selectedOrder.stageHistory?.map((log: any, index: number) => (
                     <div key={index} className="relative flex items-center gap-4 pl-6">
                       <div className="absolute left-0 w-4 h-4 bg-purple-600 rounded-full border-4 border-white"></div>
                       <div>

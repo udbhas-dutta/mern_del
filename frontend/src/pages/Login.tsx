@@ -18,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   // 1. DEFINE API URL
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
 
   const { user, token } = useSelector((state: RootState) => state.auth);
   
