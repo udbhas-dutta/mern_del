@@ -1,4 +1,3 @@
-// backend/src/server.ts
 import express, { Request, Response, Application } from 'express';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
@@ -13,15 +12,27 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Initialize Socket.io 
+// Define Allowed Origins
+const allowedOrigins = [
+  "http://localhost:5173",                          // local
+  "https://mern-logistics-frontend.onrender.com"    // production
+];
+
+// Initialize Socket.io with CORS
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow all origins 
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
   }
 });
 
-app.use(cors());
+// 3. Initialize Express CORS
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authroutes);
