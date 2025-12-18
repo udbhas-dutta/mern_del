@@ -25,7 +25,7 @@ export const createOrder = async (req: Request, res: Response) => {
     const newOrder = new Order({
       items,
       sellerId: null, //no seller assigned yet
-      buyerId,
+      buyerId: null, // no buyer assigned yet
       stage: OrderStage.PLACED,
       // MANUAL HISTORY ENTRY FOR START
       stageHistory: [{ stage: OrderStage.PLACED, timestamp: new Date() }],

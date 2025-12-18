@@ -13,7 +13,7 @@ export enum OrderStage {
 export interface IOrder extends Document {
   items: string[];
   stage: OrderStage;
-  buyerId: mongoose.Schema.Types.ObjectId;
+  buyerId?: mongoose.Schema.Types.ObjectId;
   sellerId?: mongoose.Schema.Types.ObjectId;
   stageHistory: {
     stage: OrderStage;
@@ -30,7 +30,7 @@ const OrderSchema = new Schema<IOrder>({
     enum: Object.values(OrderStage), 
     default: OrderStage.PLACED 
   },
-  buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   stageHistory: [{
     stage: { type: String, enum: Object.values(OrderStage) },
