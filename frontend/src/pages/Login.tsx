@@ -17,7 +17,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 1. DEFINE API URL
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   const { user, token } = useSelector((state: RootState) => state.auth);
+  
   useEffect(() => {
     if (user && token) {
       // Redirect based on role
@@ -32,8 +36,9 @@ const Login = () => {
     const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
 
     try {
+      // 2. USE API_URL HERE
       const res = await axios.post(
-        `http://localhost:5000${endpoint}`,
+        `${API_URL}${endpoint}`,
         formData
       );
 
@@ -43,8 +48,8 @@ const Login = () => {
 
         // Connect Socket & Join Role Room
         socket.connect();
-        socket.emit("join_room", user.role); // e.g. "Buyer", "Seller"
-        if (user.role === "Seller") socket.emit("join_room", user.id); // Seller needs specific room for their orders
+        socket.emit("join_room", user.role); 
+        if (user.role === "Seller") socket.emit("join_room", user.id); 
 
         // Redirect based on role
         if (user.role === "Admin") navigate("/admin");
