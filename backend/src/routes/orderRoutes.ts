@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, getOrders, updateStage, associateBuyer, deleteOrder } from '../controllers/orderController';
+import { createOrder, getOrders, updateStage, associateBuyer, deleteOrder, assignSeller } from '../controllers/orderController';
 import { protect, adminOnly } from '../middleware/authMiddleware';
 
 const router = express.Router();
@@ -19,4 +19,6 @@ router.put('/associate', protect, adminOnly, associateBuyer);
 // 5. Delete Order (Any role allowed by logic, usually Admin/Seller)
 router.delete('/:id', protect, deleteOrder);
 
+//6. Assign Seller (Admin Only)
+router.put('/assign-seller', protect, adminOnly, assignSeller); 
 export default router;

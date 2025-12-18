@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 
 // Socket Connection Listener
 io.on('connection', (socket) => {
-  console.log('⚡ User Connected:', socket.id);
+  console.log('⚡ WebSocket User Connected:', socket.id);
 
   socket.on('join_room', (role) => {
     socket.join(role);

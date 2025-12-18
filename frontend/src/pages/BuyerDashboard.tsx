@@ -204,7 +204,7 @@ const BuyerDashboard = () => {
         </div>
       </div>
 
-      {/* Simple Create Order Modal */}
+      {/* Create Order Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
@@ -223,20 +223,6 @@ const BuyerDashboard = () => {
                   value={newItems}
                   onChange={e => setNewItems(e.target.value)}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Seller ID</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Paste a Seller ID here"
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={sellerIdInput}
-                  onChange={e => setSellerIdInput(e.target.value)}
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  *In a real app, you would select from a list of sellers.
-                </p>
               </div>
               <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700">
                 Place Order

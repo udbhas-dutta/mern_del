@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 // Match the backend interface
 export interface Order {
@@ -24,30 +24,32 @@ const initialState: OrdersState = {
 };
 
 const ordersSlice = createSlice({
-  name: 'orders',
+  name: "orders",
   initialState,
   reducers: {
     setOrders: (state, action: PayloadAction<Order[]>) => {
       state.orders = action.payload;
     },
     addOrder: (state, action: PayloadAction<Order>) => {
-      state.orders.unshift(action.payload); // Add new order to top
-    },
-    updateOrderRealTime: (state, action: PayloadAction<Order>) => {
-      const index = state.orders.findIndex(o => o._id === action.payload._id);
-      if (index !== -1) {
-        // Update existing order
-        state.orders[index] = action.payload;
-      } else {
-        // Or if it's a new assignment (e.g., for Seller), add it
+      const exists = state.orders.some(
+        (order) => order._id === action.payload._id
+      );
+      if (!exists) {
         state.orders.unshift(action.payload);
       }
     },
-    deleteOrderRealTime: (state, action: PayloadAction<string>) => {
-      state.orders = state.orders.filter(o => o._id !== action.payload);
-    }
+    updateOrderRealTime: (state, action: PayloadAction<Order>) => {
+      const index = state.orders.findIndex((o) => o._id === action.payload._id);
+      if (index !== -1) {
+        state.orders[index] = action.payload;
+      }
+    },
+    removeOrder: (state, action: PayloadAction<string>) => {
+      state.orders = state.orders.filter((o) => o._id !== action.payload);
+    },
   },
 });
 
-export const { setOrders, addOrder, updateOrderRealTime, deleteOrderRealTime } = ordersSlice.actions;
+export const { setOrders, addOrder, updateOrderRealTime, removeOrder } =
+  ordersSlice.actions;
 export default ordersSlice.reducer;
