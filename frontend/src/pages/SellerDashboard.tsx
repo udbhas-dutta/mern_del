@@ -20,10 +20,12 @@ const SellerDashboard = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
   const { orders } = useSelector((state: RootState) => state.orders);
 
+  const API_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/orders', {
+        const res = await axios.get(`${API_URL}/api/orders`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         dispatch(setOrders(res.data));
@@ -46,11 +48,11 @@ const SellerDashboard = () => {
       socket.off('order_created');
       socket.off('order_deleted');
     };
-  }, [dispatch, token]);
+  }, [dispatch, token, API_URL]);
 
   const handleNextStage = async (orderId: string) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/orders/${orderId}/stage`, {}, {
+      const res = await axios.put(`${API_URL}/api/orders/${orderId}/stage`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch(updateOrderRealTime(res.data));
@@ -64,7 +66,7 @@ const SellerDashboard = () => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+      await axios.delete(`${API_URL}/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Redux updates via socket, but we can do it locally for instant feel

@@ -30,6 +30,8 @@ const BuyerDashboard = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
   const { orders } = useSelector((state: RootState) => state.orders);
 
+  const API_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+
   // Modal State for creating a new order
   const [showModal, setShowModal] = useState(false);
   const [newItems, setNewItems] = useState('');
@@ -39,7 +41,7 @@ const BuyerDashboard = () => {
     // 1. Fetch Buyer's Orders
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/orders', {
+        const res = await axios.get(`${API_URL}/api/orders`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         dispatch(setOrders(res.data));
@@ -66,14 +68,14 @@ const BuyerDashboard = () => {
       socket.off('order_updated');
       socket.off('order_created');
     };
-  }, [dispatch, token, user?.id]);
+  }, [dispatch, token, user?.id, API_URL]);
 
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const itemsArray = newItems.split(',').map(item => item.trim());
-      
-      const res = await axios.post('http://localhost:5000/api/orders', {
+
+      const res = await axios.post(`${API_URL}/api/orders`, {
         items: itemsArray,
         sellerId: sellerIdInput // In a real app, you'd select this from a list
       }, {
